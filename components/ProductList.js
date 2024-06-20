@@ -9,36 +9,43 @@ import {
 import ProductItem from "./ProductItem";
 import { useNavigation } from "@react-navigation/native";
 import { Context } from "../store/context";
+import Loader from "../ui/loader";
+import { ProductContext } from "../store/productContext";
 
 export default function ProductList() {
-  const URL = "https://fakestoreapi.com/products/";
-  const [products, setProducts] = useState();
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(false);
+  // const URL = "https://fakestoreapi.com/products/";
+  // const [products, setProducts] = useState();
+  // const [isLoading, setIsLoading] = useState(true);
+  // const [isError, setIsError] = useState(false);
   const navigation = useNavigation();
   const ctx = useContext(Context);
+  const ProdCtx = useContext(ProductContext)
 
-  useEffect(() => {
-    fetchData();
-  }, []);
 
-  function fetchData() {
-    fetch(URL)
-      .then((response) => response.json())
-      .then((data) => {
-        setProducts(data);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsError(true);
-        setIsLoading(false);
-      });
-  }
+  const products = ProdCtx.products;
+  const isLoading = ProdCtx.isLoading;
+  const isError = ProdCtx.isError
 
-  function addToCart(item) {
-    ctx.setCartItems((prevItems) => [...prevItems, item]);
-  }
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
+  // function fetchData() {
+  //   fetch(URL)
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setProducts(data);
+  //       setIsLoading(false);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       setIsError(true);
+  //       setIsLoading(false);
+  //     });
+  // }
+
+
 
   function ErrorText() {
     return (
@@ -51,7 +58,7 @@ export default function ProductList() {
   }
 
   if (isLoading) {
-    return <ActivityIndicator size={28} color={"blue"} style={styles.loader} />;
+    return <Loader />;
   }
 
   return isError ? (
@@ -67,7 +74,7 @@ export default function ProductList() {
           onPress={() => {
             navigation.navigate("Product", { product: item });
           }}
-          cartHandler={()=>addToCart(item)}
+          cartHandler={()=>ctx.addToCart(item)}
         >Add to Cart</ProductItem>
       )}
       showsVerticalScrollIndicator={false}
@@ -77,11 +84,7 @@ export default function ProductList() {
 }
 
 const styles = StyleSheet.create({
-  loader: {
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-  },
+
   error: {
     fontSize: 20,
     color: "red",

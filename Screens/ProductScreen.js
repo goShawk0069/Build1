@@ -1,12 +1,23 @@
 import { useRoute } from "@react-navigation/native";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Card, Rating } from "@rneui/themed";
+import { Card, Chip, Rating } from "@rneui/themed";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function PorductScreen() {
-const route = useRoute();
-    const product = route.params.product
+  const route = useRoute();
+  const product = route.params.product;
+
+
+  if (!product) {
+    return (
+      <View style={styles.centered}>
+        <Text>No product data available.</Text>
+      </View>
+    );
+  }
 
   return (
+    <>
     <Card>
       <Card.Title>{product.title}</Card.Title>
       <Card.Divider />
@@ -22,6 +33,8 @@ const route = useRoute();
       />
       <Text>{product.rating.count} reviews</Text>
     </Card>
+  
+    </>
   );
 }
 

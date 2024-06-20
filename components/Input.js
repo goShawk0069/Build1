@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
-export default function Input({ children, value, onChange, passwordHide }) {
+export default function Input({ children,isInvalid, value, onChange, passwordHide }) {
   return (
     <View style={styles.root}>
       <View style = {styles.textbox}>

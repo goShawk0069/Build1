@@ -1,20 +1,18 @@
-import { Text } from "react-native";
-import LoginForm from "../components/LoginForm";
-import { useNavigation } from "@react-navigation/native";
+import { Text } from "@rneui/themed";
 import AuthContent from "../components/AuthContent";
-import { login } from "../util/auth";
+import { signup } from "../util/auth";
 import { useContext, useState } from "react";
 import Loader from "../ui/loader";
 import { AuthContext } from "../store/auth-context";
 
-export default function LoginScreen() {
+export default function SignupScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
-  const authCtx = useContext(AuthContext)
-  async function userLogin({ email, password }) {
+  const authCtx = useContext(AuthContext);
+  async function userSignup({ email, password }) {
     setIsAuthenticating(true);
     try {
-    const token =  await login(email, password);
-      authCtx.authenticate(token)
+      const token = await signup(email, password);
+      authCtx.authenticate(token);
       setIsAuthenticating(false);
     } catch (error) {
       console.log("error occured");
@@ -25,5 +23,6 @@ export default function LoginScreen() {
   if (isAuthenticating) {
     return <Loader />;
   }
-  return <AuthContent isLogin onAuthenticate={userLogin}/>;
+
+  return <AuthContent onAuthenticate={userSignup} />;
 }
