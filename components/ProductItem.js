@@ -1,12 +1,14 @@
 import { Image, Pressable, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import Buttonx from "../ui/Buttonx";
 
-export default function ProductItem({ children, image, title, price, onPress, cartHandler }) {
+export default function ProductItem({ children,images = [], image, title, price, onPress, cartHandler }) {
   
+  const imageUrl = images && images.length > 0 ? images[0] : image || null
+
   return (
     <Pressable style={({pressed})=> pressed && styles.press} onPress={onPress}>
      <View style={styles.card}>
-      <Image source={{ uri: image }} style={styles.image} />
+      {imageUrl ? <Image source={{ uri: imageUrl }} style={styles.image} /> :  <View style={styles.imagePlaceholder}><Text>No Image</Text></View>} 
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.price}>${price}</Text>
       <TouchableOpacity style={styles.button} onPress={cartHandler}>
@@ -53,5 +55,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  imagePlaceholder: {
+    width: 150,
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
+    marginBottom: 10,
   },
 });

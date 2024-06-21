@@ -10,7 +10,7 @@ import PorductScreen from "./Screens/ProductScreen";
 import ContextProvider from "./store/context";
 import SignupScreen from "./Screens/SignupScreen";
 import AuthContextProvider, { AuthContext } from "./store/auth-context";
-import { useContext } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -23,13 +23,19 @@ import ProductContextProvider from "./store/productContext";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import OrdersScreen from "./Screens/OrdersScreen";
-import Buttonx from "./ui/Buttonx";
-import IconBtn from "./ui/iconBtn";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Loader from "./ui/loader";
+import * as SplashScreen from 'expo-splash-screen'
+import OrdersContextProvider from "./store/ordersContext";
+import NotificationScreen from "./Screens/Notifications";
+import DrawerContentComponent from "./components/DrawerContent";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+
+// SplashScreen.preventAutoHideAsync();
 
 function AuthStack() {
   return (
@@ -44,7 +50,7 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView>
       <DrawerItemList {...props} />
-      <DrawerItem label={() => <LogoutButton />} />
+     
     </DrawerContentScrollView>
   );
 }
@@ -54,14 +60,15 @@ function MyDrawer() {
     <ProductContextProvider>
       <Drawer.Navigator
         screenOptions={{ headerStyle: { backgroundColor: "#a14100" } }}
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
+        drawerContent={(props) => <DrawerContentComponent {...props} />}
       >
-        <Drawer.Screen name="Home" component={CategoriesSceren} />
+        <Drawer.Screen name="Categories" component={CategoriesSceren} />
         <Drawer.Screen
           name="All_Items"
           component={HomeScreen}
           options={{ headerStyle: { backgroundColor: "#a14100" } }}
         />
+        <Drawer.Screen name="Notifications" component={NotificationScreen}/>
       </Drawer.Navigator>
     </ProductContextProvider>
   );
@@ -92,6 +99,7 @@ function AuthenticatedStackk() {
 
 function CompleteAuthenticatedScreens() {
   return (
+    <OrdersContextProvider>
     <Tab.Navigator
       screenOptions={{tabBarStyle : {backgroundColor : "#a14100"}, headerStyle : {backgroundColor : "#a14100"}}}
     >
@@ -113,6 +121,7 @@ function CompleteAuthenticatedScreens() {
         }}
       />
     </Tab.Navigator>
+      </OrdersContextProvider>
   );
 }
 
@@ -126,10 +135,54 @@ function Navigate() {
   );
 }
 
+
+function Root(){
+  const [isLoggingIn, setIsLoggingIn] = useState(true);
+  const authCtx = useContext(AuthContext)
+
+  useEffect(() => {
+    async function fetchToken() {
+      const token = await AsyncStorage.getItem("token");
+
+      if (token) {
+        authCtx.authenticate(token);
+      }
+      setIsLoggingIn(false)
+    }
+    fetchToken()
+  }, []);
+
+
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (!isLoggingIn) {
+    
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [isLoggingIn]);
+
+  // if (isLoggingIn) {
+  //   return null;
+  // }
+
+  if(isLoggingIn){
+    return <Loader />
+  }
+
+  return( 
+  
+    <Navigate />
+
+  
+  )
+};
+
+
 export default function App() {
+ 
+
   return (
     <AuthContextProvider>
-      <Navigate />
+      <Root />
     </AuthContextProvider>
   );
 }

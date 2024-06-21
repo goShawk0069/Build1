@@ -10,18 +10,17 @@ export default function CartItem({
   quantity,
   title,
   image,
+  images = [],
   price,
   cartHandler,
   children,
 }) {
+  const imageUrl = images && images.length > 0 ? images[0] : image || null;
 
-
-    const ctx = useContext(Context)
+  const ctx = useContext(Context);
 
   function increaseQuantity() {
-    
-      cartHandler(id, quantity + 1);
-    
+    cartHandler(id, quantity + 1);
   }
 
   function decreaseQuantity() {
@@ -31,15 +30,20 @@ export default function CartItem({
   }
 
   function removeFromCart() {
-    ctx.removeFromCart(id)
+    ctx.removeFromCart(id);
   }
-  const newPrice = quantity * price
+  const newPrice = quantity * price;
   return (
     <Card containerStyle={styles.card}>
-      
       <View style={styles.row}>
         <View style={styles.imgBox}>
-          <Image source={{ uri: image }} style={styles.img} />
+          {imageUrl ? (
+            <Image source={{ uri: imageUrl }} style={styles.img} />
+          ) : (
+            <View style={styles.imagePlaceholder}>
+              <Text>No Image</Text>
+            </View>
+          )}
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.title}>{title}</Text>
@@ -121,5 +125,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
     textAlign: "center",
+  },
+  imagePlaceholder: {
+    // width: 150,
+    // height: 150,
+    flex : 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e0e0e0",
+    
+    
   },
 });

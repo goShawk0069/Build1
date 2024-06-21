@@ -14,7 +14,7 @@ export default function CartItemsList() {
     <FlatList
       data={cartProduct}
       renderItem={({ item, index }) => (
-        <CartItem image={item.image} price={item.price} title={item.title} cartHandler={ctx.updatedCartItemQuantity} quantity={item.quantity} id={item.id}>Remove from Cart</CartItem>
+        <CartItem image={item.image} images={item.images} price={item.price} title={item.title} cartHandler={ctx.updatedCartItemQuantity} quantity={item.quantity} id={item.id}>Remove from Cart</CartItem>
       )}
       keyExtractor={(item,index) => `${item.id}-${index}`}
       ListEmptyComponent={() => (

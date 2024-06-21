@@ -6,7 +6,10 @@ import { LinearGradient } from "expo-linear-gradient";
 export default function PorductScreen() {
   const route = useRoute();
   const product = route.params.product;
+  const images = product.images
+  const image = product.image
 
+  const imageUrl = images && images.length > 0 ? images[0] : image || null;
 
   if (!product) {
     return (
@@ -21,17 +24,23 @@ export default function PorductScreen() {
     <Card>
       <Card.Title>{product.title}</Card.Title>
       <Card.Divider />
-      <Image source={{ uri: product.image }} style={styles.image} />
+      {imageUrl ? (
+            <Image source={{ uri: imageUrl }} style={styles.image} />
+          ) : (
+            <View style={styles.imagePlaceholder}>
+              <Text>No Image</Text>
+            </View>
+          )}
       <Text style={styles.price}>${product.price}</Text>
       <Text style={styles.description}>{product.description}</Text>
-      <Text style={styles.category}>{product.category}</Text>
+      <Text style={styles.category}>{product.category.name}</Text>
       <Rating
 
         readonly
-        startingValue={product.rating.rate}
+        startingValue={4}
         imageSize={10}
       />
-      <Text>{product.rating.count} reviews</Text>
+      
     </Card>
   
     </>
@@ -58,4 +67,10 @@ const styles = StyleSheet.create({
     color: "#888",
     marginVertical: 10,
   },
+  imagePlaceholder : {
+    flex : 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e0e0e0",
+  }
 });

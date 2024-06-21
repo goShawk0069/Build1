@@ -27,24 +27,7 @@ export default function ProductList() {
   const isError = ProdCtx.isError
 
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-
-  // function fetchData() {
-  //   fetch(URL)
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       setProducts(data);
-  //       setIsLoading(false);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       setIsError(true);
-  //       setIsLoading(false);
-  //     });
-  // }
-
+ 
 
 
   function ErrorText() {
@@ -68,6 +51,7 @@ export default function ProductList() {
       data={products}
       renderItem={({ item }) => (
         <ProductItem
+          images={item.images}
           image={item.image}
           price={item.price}
           title={item.title}
@@ -78,7 +62,7 @@ export default function ProductList() {
         >Add to Cart</ProductItem>
       )}
       showsVerticalScrollIndicator={false}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item, index) => item.id.toString() + index.toString()}
     />
   );
 }

@@ -9,7 +9,7 @@ export const ProductContext = createContext({
 });
 
 export default function ProductContextProvider({ children }) {
-  const URL = "https://fakestoreapi.com/products/";
+  const URL = "https://api.escuelajs.co/api/v1/products";
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -24,7 +24,7 @@ export default function ProductContextProvider({ children }) {
       .then((data) => {
         setProducts(data);
         setIsLoading(false);
-        console.log(data)
+        
       })
       .catch((error) => {
         console.log(error);

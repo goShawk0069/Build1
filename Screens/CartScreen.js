@@ -5,11 +5,13 @@ import { Context } from "../store/context";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import Buttonx from "../ui/Buttonx";
 import { useStripe } from "@stripe/stripe-react-native";
+import { OrdersContext } from "../store/ordersContext";
 
 const URL = "http://192.168.29.15:5000";
 
 export default function CartScreen() {
   const isFocused = useIsFocused();
+  const OrderCtx = useContext(OrdersContext)
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [clientSecret, setClientSecret] = useState("");
   const [isPaymentSheetInitialized, setIsPaymentSheetInitialized] =
@@ -104,7 +106,9 @@ export default function CartScreen() {
       Alert.alert("Error", error.message);
     } else {
       Alert.alert("Success", "Your payment was successful!");
-     navigation.navigate('Orders',{orderedItems : ctx.cartItems})
+      await OrderCtx.sendToOrders(ctx.cartItems)
+    //  navigation.navigate('Orders',{orderedItems : ctx.cartItems})
+     
       ctx.setCartItems([]);
     }
   }

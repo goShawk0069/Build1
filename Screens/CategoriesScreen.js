@@ -4,31 +4,64 @@ import { ProductContext } from "../store/productContext";
 import Loader from "../ui/loader";
 import CategoryTile from "../components/CategoryTile";
 
+
+const categoryURL = 'https://api.escuelajs.co/api/v1/categories'
 export default function CategoriesSceren() {
-  const ProdCtx = useContext(ProductContext);
+  // const ProdCtx = useContext(ProductContext);
   const [categories, setCategories] = useState([]);
 
+// useEffect(() => {
+// //   if(ProdCtx.products.length > 0){
+// //     const categorieSet = new Set(ProdCtx.products.map((item) => item.category));
+// //     const uniqueCategories = Array.from(categorieSet);
+// //     setCategories(uniqueCategories)
+
+// //   }
+// // }, [ProdCtx.products]);
+
+
+// if (ProdCtx.products.length > 0) {
+//   const categoryMap = ProdCtx.products.reduce((acc, item) => {
+//     if (!acc[item.category.id]) {
+//       acc[item.category.id] = item.category;
+//     }
+//     return acc;
+//   }, {});
+//   const uniqueCategories = Object.values(categoryMap);
+//   setCategories(uniqueCategories);
+// }
+// }, [ProdCtx.products]);
+
+
+//   if(ProdCtx.isLoading){
+//     return <Loader />
+//   }
+
+
+
+
+
+
 useEffect(() => {
-  if(ProdCtx.products.length > 0){
-    const categorieSet = new Set(ProdCtx.products.map((item) => item.category));
-    const uniqueCategories = Array.from(categorieSet);
-    setCategories(uniqueCategories)
-
-  }
-}, [ProdCtx.products]);
+  fetchCategories()
+}, []);
 
 
-  if(ProdCtx.isLoading){
-    return <Loader />
-  }
+ function fetchCategories(){
+  fetch(categoryURL)
+  .then((response)=>response.json())
+  .then((categoryData)=>setCategories(categoryData))
+  console.log('All categoires = ', categories)
+}
+
 
   return (
     <FlatList 
       data={categories}
       numColumns={2}
-      renderItem={({ item }) => <CategoryTile text={item} />} keyExtractor={(item)=> item}
+      renderItem={({ item }) => <CategoryTile text={item.name} image={item.image} />} keyExtractor={(item)=> item.id}
     />
-    
+  
   );
   
 }

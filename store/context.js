@@ -12,9 +12,9 @@ export const Context = createContext({
 export default function ContextProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
-  useEffect(() => {
-    console.log(cartItems);
-  }, [cartItems]);
+  // useEffect(() => {
+  //   console.log(cartItems);
+  // }, [cartItems]);
 
   const addToCart = (item) => {
     const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);

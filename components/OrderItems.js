@@ -1,59 +1,51 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Card } from "@rneui/themed";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import IconBtn from "../ui/iconBtn";
 import { useContext, useState } from "react";
 import { Context } from "../store/context";
 
 export default function OrderedItems({
-  id,
+  
   quantity,
   title,
   image,
+  images,
   price,
-  cartHandler,
-  children,
+  description
 }) {
+  const imageUrl = images && images.length > 0 ? images[0] : image || null;
 
 
-    const ctx = useContext(Context)
 
-  function increaseQuantity() {
-    
-      cartHandler(id, quantity + 1);
-    
-  }
-
-  function decreaseQuantity() {
-    if (quantity > 1) {
-      cartHandler(id, quantity - 1);
-    }
-  }
-
-  function removeFromCart() {
-    ctx.removeFromCart(id)
-  }
-  const newPrice = quantity * price
+  const newPrice = quantity * price;
   return (
     <Card containerStyle={styles.card}>
-      
       <View style={styles.row}>
         <View style={styles.imgBox}>
-          <Image source={{ uri: image }} style={styles.img} />
+          {imageUrl ? (
+            <Image source={{ uri: imageUrl }} style={styles.img} />
+          ) : (
+            <View style={styles.imagePlaceholder}>
+              <Text>No Image</Text>
+            </View>
+          )}
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <View style={styles.priceRow}>
-            <Text style={styles.price}>${newPrice.toFixed(2)}</Text>
-            <View style={styles.quantity}>
-              <IconBtn icon={"add"} size={16} onPress={increaseQuantity} />
-              <Text>{quantity}</Text>
-              <IconBtn icon={"remove"} size={16} onPress={decreaseQuantity} />
-            </View>
+          <View style={styles.quantity}>
+            <Text>Quantity :</Text>
+            <Text>{quantity}</Text>
           </View>
-          <TouchableOpacity style={styles.button} onPress={removeFromCart}>
-            <Text style={styles.buttonText}>{children}</Text>
-          </TouchableOpacity>
+          <View style={styles.priceRow}>
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.price}>${newPrice.toFixed(2)}</Text>
+          </View>
+          <View style = {styles.scroll}>
+            <ScrollView>
+
+            <Text>{description}</Text>
+            </ScrollView>
+          </View>
         </View>
       </View>
     </Card>
@@ -61,28 +53,36 @@ export default function OrderedItems({
 }
 
 const styles = StyleSheet.create({
+  scroll : {
+    maxHeight : 100,
+    // borderWidth :0.5,
+    padding : 2,
+    elevation : 0.5
+  },
   priceRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
   },
   quantity: {
     flexDirection: "row",
     paddingHorizontal: 4,
     marginRight: 6,
     marginBottom: 2,
-    alignItems: "center",
+    // alignItems: "center",
     borderWidth: 1,
     borderColor: "#dbd5d5",
     justifyContent: "space-between",
-    width: "25%",
+    width: "40%",
+    // alignSelf : 'center'
+    top : 0
   },
   card: {
     padding: 10,
     borderRadius: 10,
   },
   row: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: "row-reverse",
+    // alignItems: "center",
   },
   imgBox: {
     height: 100,
@@ -100,6 +100,8 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
+    // borderWidth :1,
+    top : 0
   },
   title: {
     fontSize: 16,
@@ -121,5 +123,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
     textAlign: "center",
+  },
+  imagePlaceholder: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#e0e0e0",
   },
 });

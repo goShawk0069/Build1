@@ -1,13 +1,12 @@
-import { Card } from "@rneui/themed";
-import { Pressable, Text } from "react-native";
+import { Image, Pressable, Text } from "react-native";
 import { StyleSheet } from "react-native";
 
-export default function CategoryTile({ text }) {
+export default function CategoryTile({ text, image,onPress }) {
   return (
-    <Pressable
+    <Pressable onPress={onPress}
       style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
     >
-      
+      <Image source={{uri : image}} style = {styles.img}/> 
         <Text style={styles.text}>{text}</Text>
       
     </Pressable>
@@ -31,10 +30,19 @@ const styles = StyleSheet.create({
  
   text: {
     fontSize: 20, // Slightly smaller font size for better fit
-    fontWeight: "bold",
+    fontWeight: "500",
+    fontStyle : 'italic',
     color: "#333", // Darker text color for better readability
+    position : 'absolute',
+    bottom : 0,
+    color :'#000000ff'
   },
   pressed: {
     opacity: 0.75,
   },
+  img : {
+    height : '100%',
+    width : '100%'
+  
+  }
 });
